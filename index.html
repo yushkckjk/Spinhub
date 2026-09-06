@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spinhub | متجر ألعاب التركيز الفاخر</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Tajawal', sans-serif; }
+    .glow-cyan { box-shadow: 0 0 25px rgba(6, 182, 212, 0.25); }
+    .glow-hover:hover { box-shadow: 0 0 35px rgba(6, 182, 212, 0.4); }
+    .glass-card { background: rgba(23, 23, 23, 0.7); backdrop-filter: blur(12px); }
+  </style>
+</head>
+<body class="bg-[#08080a] text-neutral-100 min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
+
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-cyan-500/10 blur-[150px] pointer-events-none rounded-full"></div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 border-b border-neutral-800/80 bg-[#08080a]/80 backdrop-blur-2xl">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 flex items-center justify-center font-black text-2xl shadow-lg shadow-cyan-500/30 text-black">
+          F
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-white via-neutral-200 to-cyan-400">
+           Spinhub<span class="text-cyan-400">.</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="toggleCart()" class="relative p-3 bg-neutral-900/90 border border-neutral-800 rounded-xl hover:border-cyan-500/50 transition duration-300">
+          <i data-lucide="shopping-bag" class="w-5 h-5 text-neutral-300"></i>
+          <span id="cart-badge" class="hidden absolute -top-1.5 -right-1.5 bg-cyan-400 text-black font-black text-xs w-5 h-5 rounded-full items-center justify-center shadow-lg shadow-cyan-400/50">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-16 pb-12 px-6 text-center z-10">
+    <div class="max-w-4xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs font-bold mb-6 glow-cyan">
+        <i data-lucide="sparkles" class="w-4 h-4"></i> ألعاب تركيز واسترخاء بخامات أصلية 100%
+      </div>
+      <h1 class="text-4xl md:text-6xl font-black leading-tight mb-6 tracking-tight">
+        غير تجربة الـ Spinhub<br />
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-500">
+          لأعلى مستوى من الفخامة
+        </span>
+      </h1>
+      <p class="text-neutral-400 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
+        تشكيلة مخصصة لعشاق الهدوء والتركيز. خامات فاخرة، صوت مريح، وتصاميم مذهلة. معاينة عند الاستلام وشحن سريع لكل مصر.
+      </p>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section id="products" class="max-w-7xl mx-auto px-6 py-8 w-full z-10">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <span class="text-cyan-400 font-black text-xs tracking-widest block mb-2">COLLECTION 2026</span>
+        <h2 class="text-3xl font-black">جميع المنتجات المتاحة</h2>
+      </div>
+    </div>
+    <div id="products-container" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+  </section>
+
+  <!-- Modal تفاصيل المنتج للزبون -->
+  <div id="product-detail-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="bg-[#0d0d10] border border-neutral-800 w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeProductModal()" class="absolute top-4 left-4 z-10 w-10 h-10 bg-black/60 rounded-full flex items-center justify-center border border-neutral-700 text-neutral-300 hover:text-white">✕</button>
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <div class="bg-neutral-950 p-6 flex items-center justify-center">
+          <img id="modal-img" src="" class="w-full aspect-square object-cover rounded-2xl border border-neutral-800">
+        </div>
+        <div class="p-6 flex flex-col justify-between">
+          <div>
+            <span id="modal-badge" class="inline-block bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs font-bold px-3 py-1 rounded-full mb-3"></span>
+            <h3 id="modal-title" class="text-2xl font-black mb-2"></h3>
+            <div id="modal-price" class="text-2xl font-black text-cyan-400 mb-4"></div>
+            <p id="modal-desc" class="text-neutral-400 text-sm leading-relaxed mb-6"></p>
+          </div>
+          <div class="mb-6">
+            <span class="text-xs font-bold text-neutral-500 block mb-2">فيديو معاينة المنتج:</span>
+            <div class="aspect-video rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800">
+              <video id="modal-video" class="w-full h-full object-cover" controls loop muted>
+                <source id="modal-video-source" src="" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <button id="modal-buy-btn" class="w-full py-4 bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-black rounded-2xl shadow-lg shadow-cyan-500/20 hover:opacity-90 transition">
+            أضف إلى السلة الآن
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal لوحة تحكم الأدمن (Ctrl + Shift + A) -->
+  <div id="admin-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="bg-[#0d0d10] border border-amber-500/30 w-full max-w-2xl rounded-3xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto space-y-6">
+      <div class="flex justify-between items-center border-b border-neutral-800 pb-4">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shield-check" class="w-6 h-6 text-amber-400"></i>
+          <h3 class="text-xl font-black text-white">لوحة تحكم الأدمن</h3>
+        </div>
+        <button onclick="closeAdminModal()" class="text-neutral-500 hover:text-white">✕</button>
+      </div>
+
+      <div class="bg-neutral-950 p-5 rounded-2xl border border-neutral-800 space-y-4">
+        <h4 id="form-title" class="text-sm font-bold text-amber-400">إضافة منتج جديد للمتجر</h4>
+        <input type="hidden" id="edit-id" value="">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <input type="text" id="prod-name" placeholder="اسم المنتج" class="bg-neutral-900 border border-neutral-800 rounded-xl p-3 outline-none focus:border-amber-400 text-white">
+          <input type="number" id="prod-price" placeholder="السعر (ج.م)" class="bg-neutral-900 border border-neutral-800 rounded-xl p-3 outline-none focus:border-amber-400 text-white">
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <!-- اختيار صورة -->
+          <div class="flex flex-col gap-2">
+            <label class="cursor-pointer bg-neutral-900 border border-neutral-800 hover:border-amber-400 text-neutral-300 rounded-xl p-3 flex items-center justify-between transition">
+              <span id="image-file-label" class="text-xs truncate">اختر صورة من جهازك...</span>
+              <i data-lucide="image" class="w-4 h-4 text-amber-400 shrink-0"></i>
+              <input type="file" id="prod-img-file" accept="image/*" class="hidden" onchange="handleImageFileUpload(event)">
+            </label>
+            <input type="hidden" id="prod-img-url" value="">
+          </div>
+
+          <!-- اختيار فيديو -->
+          <div class="flex flex-col gap-2">
+            <label class="cursor-pointer bg-neutral-900 border border-neutral-800 hover:border-amber-400 text-neutral-300 rounded-xl p-3 flex items-center justify-between transition">
+              <span id="video-file-label" class="text-xs truncate">اختر فيديو من جهازك...</span>
+              <i data-lucide="video" class="w-4 h-4 text-amber-400 shrink-0"></i>
+              <input type="file" id="prod-video-file" accept="video/*" class="hidden" onchange="handleVideoFileUpload(event)">
+            </label>
+            <input type="hidden" id="prod-video-url" value="">
+          </div>
+        </div>
+
+        <!-- معاينة الملفات المختارة -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div id="admin-image-preview-container" class="hidden">
+            <span class="text-xs font-bold text-amber-400 block mb-1">معاينة الصورة:</span>
+            <div class="aspect-video max-h-36 rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 flex items-center justify-center">
+              <img id="admin-image-preview" src="" class="w-full h-full object-cover">
+            </div>
+          </div>
+
+          <div id="admin-video-preview-container" class="hidden">
+            <span class="text-xs font-bold text-amber-400 block mb-1">معاينة الفيديو:</span>
+            <div class="aspect-video max-h-36 rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800">
+              <video id="admin-video-preview" class="w-full h-full object-cover" controls muted>
+                <source id="admin-video-preview-src" src="" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <textarea id="prod-desc" placeholder="تفاصيل ومعلومات المنتج..." class="w-full bg-neutral-900 border border-neutral-800 rounded-xl p-3 outline-none focus:border-amber-400 h-20 text-sm text-white"></textarea>
+        <div class="flex gap-2">
+          <button onclick="saveProduct()" class="flex-1 py-3 bg-amber-400 hover:bg-amber-300 text-black font-black rounded-xl transition">حفظ المنتج</button>
+          <button onclick="resetAdminForm()" class="px-4 py-3 bg-neutral-800 text-neutral-400 hover:text-white font-bold rounded-xl transition">إلغاء التعديل</button>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-sm font-bold text-neutral-400 mb-3">إدارة المنتجات والتعديل عليها:</h4>
+        <div id="admin-products-list" class="space-y-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div id="cart-drawer" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden justify-end">
+    <div class="w-full max-w-md bg-[#0c0c0e] h-full p-6 flex flex-col justify-between border-r border-neutral-800 shadow-2xl">
+      <div>
+        <div class="flex justify-between items-center pb-6 border-b border-neutral-800">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shopping-bag" class="w-5 h-5 text-cyan-400"></i>
+            <h3 class="text-xl font-black">سلة المشتريات</h3>
+          </div>
+          <button onclick="toggleCart()" class="p-2 hover:bg-neutral-800 rounded-xl text-neutral-400">✕</button>
+        </div>
+        <div id="cart-items" class="py-6 space-y-4 max-h-[50vh] overflow-y-auto">
+          <p class="text-neutral-500 text-center py-8">السلة فارغة حالياً</p>
+        </div>
+      </div>
+
+      <div class="border-t border-neutral-800 pt-6 space-y-4">
+        <div class="flex justify-between text-lg font-black">
+          <span>الإجمالي:</span>
+          <span id="total-price" class="text-cyan-400">0 ج.م</span>
+        </div>
+        <button onclick="submitOrder()" class="w-full py-4 bg-emerald-400 hover:bg-emerald-300 text-black font-black rounded-2xl shadow-lg shadow-emerald-400/20 transition">
+          تأكيد الطلب (الدفع عند الاستلام)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-neutral-800/80 py-8 text-center text-xs text-neutral-500 z-10">
+    جميع الحقوق محفوظة © 2026 | Spinhub
+
+  <script>
+    const ADMIN_PASS = "1234";
+    const SAMPLE_VIDEO = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+    const SAMPLE_IMAGE = "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?q=80&w=600&auto=format&fit=crop";
+
+    // المنتجات الافتراضية إذا كانت الذاكرة فارغة
+    const initialProducts = [
+      {
+        id: 1,
+        name: "Spinhub Cube Pro - الإصدار المعدني",
+        price: 250,
+        badge: "الأكثر مبيعاً 🔥",
+        image: SAMPLE_IMAGE,
+        video: SAMPLE_VIDEO,
+        desc: "6 أوجه تفاعلية صامته تحتوي على أزرار، بكرات، ومفاتيح ميكانيكية مريحة جداً لمساعدتك على التركيز والتخلص من التوتر."
+      },
+      {
+        id: 2,
+        name: "Infinity Cube فاخر",
+        price: 190,
+        badge: "جديد ✨",
+        image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=600&auto=format&fit=crop",
+        video: SAMPLE_VIDEO,
+        desc: "مصنوع من سبائك الألومنيوم المقاومة للخدش والصدمات، حركة طي انسيابية لا تنتهي في يدك."
+      }
+    ];
+
+    let products = [];
+    let cart = [];
+
+    // --- آليات حفظ واسترجاع البيانات عبر LocalStorage ---
+
+    function saveProductsToStorage() {
+      localStorage.setItem('Spinhub_products', JSON.stringify(products));
+    }
+
+    function loadProductsFromStorage() {
+      const saved = localStorage.getItem('Spinhub_products');
+      if (saved) {
+        products = JSON.parse(saved);
+      } else {
+        products = initialProducts;
+        saveProductsToStorage();
+      }
+    }
+
+    function saveCartToStorage() {
+      localStorage.setItem('Spinhub_cart', JSON.stringify(cart));
+    }
+
+    function loadCartFromStorage() {
+      const saved = localStorage.getItem('Spinhub_cart');
+      if (saved) {
+        cart = JSON.parse(saved);
+      }
+    }
+
+    // اختصار الكيبورد لفتح لوحة الأدمن: Ctrl + Shift + A
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a' || e.key === 'ش')) {
+        const pass = prompt("أدخل رمز مرور الأدمن:");
+        if (pass === ADMIN_PASS) {
+          renderAdminList();
+          const modal = document.getElementById('admin-modal');
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        } else if (pass !== null) {
+          alert("رمز المرور غير صحيح!");
+        }
+      }
+    });
+
+    // رفع واختيار ملف صورة
+    function handleImageFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const fileUrl = e.target.result;
+          document.getElementById('prod-img-url').value = fileUrl;
+          document.getElementById('image-file-label').innerText = file.name;
+
+          const container = document.getElementById('admin-image-preview-container');
+          const imgEl = document.getElementById('admin-image-preview');
+          imgEl.src = fileUrl;
+          container.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // رفع واختيار ملف فيديو
+    function handleVideoFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const fileUrl = e.target.result;
+          document.getElementById('prod-video-url').value = fileUrl;
+          document.getElementById('video-file-label').innerText = file.name;
+
+          const container = document.getElementById('admin-video-preview-container');
+          const videoEl = document.getElementById('admin-video-preview');
+          const videoSrc = document.getElementById('admin-video-preview-src');
+          videoSrc.src = fileUrl;
+          videoEl.load();
+          container.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('products-container');
+      if (!container) return;
+
+      container.innerHTML = products.map((product) => `
+        <div class="group border border-neutral-800/80 glass-card rounded-3xl overflow-hidden hover:border-cyan-500/50 transition-all duration-500 glow-hover flex flex-col justify-between">
+          <div onclick="openProductModal(${product.id})" class="cursor-pointer">
+            <div class="relative aspect-square overflow-hidden bg-neutral-950">
+              <img src="${product.image}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+              <span class="absolute top-4 right-4 bg-neutral-950/80 backdrop-blur-md text-cyan-400 border border-cyan-500/30 text-xs font-black px-3 py-1.5 rounded-full shadow-lg">${product.badge}</span>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2 group-hover:text-cyan-400 transition">${product.name}</h3>
+              <p class="text-neutral-400 text-sm mb-4 line-clamp-2">${product.desc}</p>
+              <div class="text-3xl font-black text-white">${product.price} ج.م</div>
+            </div>
+          </div>
+          <div class="p-6 pt-0">
+            <button onclick="addToCart('${product.name.replace(/'/g, "\\'")}', ${product.price})" class="w-full py-4 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-black font-black rounded-2xl flex items-center justify-center gap-2 transition duration-300 shadow-lg shadow-cyan-500/20">
+              <i data-lucide="shopping-bag" class="w-5 h-5"></i> أضف إلى السلة
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    function openProductModal(id) {
+      const product = products.find(p => p.id === id);
+      if(!product) return;
+      document.getElementById('modal-img').src = product.image;
+      document.getElementById('modal-title').innerText = product.name;
+      document.getElementById('modal-price').innerText = `${product.price} ج.م`;
+      document.getElementById('modal-desc').innerText = product.desc;
+      document.getElementById('modal-badge').innerText = product.badge;
+      
+      const videoEl = document.getElementById('modal-video');
+      const videoSrc = document.getElementById('modal-video-source');
+      videoSrc.src = product.video;
+      videoEl.load();
+
+      document.getElementById('modal-buy-btn').onclick = function() {
+        addToCart(product.name, product.price);
+        closeProductModal();
+      };
+
+      const modal = document.getElementById('product-detail-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeProductModal() {
+      const videoEl = document.getElementById('modal-video');
+      if (videoEl) videoEl.pause();
+      const modal = document.getElementById('product-detail-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function closeAdminModal() {
+      const modal = document.getElementById('admin-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      resetAdminForm();
+    }
+
+    function renderAdminList() {
+      const listContainer = document.getElementById('admin-products-list');
+      if (!listContainer) return;
+
+      listContainer.innerHTML = products.map((p) => `
+        <div class="flex items-center justify-between bg-neutral-900 p-3 rounded-xl border border-neutral-800 text-xs">
+          <div class="flex items-center gap-3">
+            <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
+            <div>
+              <div class="font-bold text-white">${p.name}</div>
+              <div class="text-amber-400 font-bold">${p.price} ج.م</div>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="editProduct(${p.id})" class="px-3 py-1.5 bg-neutral-800 text-cyan-400 rounded-lg font-bold">تعديل</button>
+            <button onclick="deleteProduct(${p.id})" class="px-3 py-1.5 bg-red-500/10 text-red-400 rounded-lg font-bold">حذف</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function saveProduct() {
+      const editId = document.getElementById('edit-id').value;
+      const name = document.getElementById('prod-name').value;
+      const price = parseFloat(document.getElementById('prod-price').value);
+      const image = document.getElementById('prod-img-url').value || SAMPLE_IMAGE;
+      const video = document.getElementById('prod-video-url').value || SAMPLE_VIDEO;
+      const desc = document.getElementById('prod-desc').value;
+
+      if (!name || isNaN(price)) {
+        alert("يرجى إدخال اسم المنتج وسعره بشكل صحيح!");
+        return;
+      }
+
+      if (editId) {
+        const index = products.findIndex(p => p.id == editId);
+        if (index !== -1) {
+          products[index] = { ...products[index], name, price, image, video, desc };
+        }
+      } else {
+        products.push({ id: Date.now(), name, price, badge: "جديد 🆕", image, video, desc });
+      }
+
+      saveProductsToStorage(); // حفظ قائمة المنتجات مجدداً
+      renderProducts();
+      renderAdminList();
+      resetAdminForm();
+      alert("تم حفظ المنتج بنجاح وحفظ البيانات للزيارات القادمة!");
+    }
+
+    function editProduct(id) {
+      const p = products.find(item => item.id === id);
+      if(!p) return;
+      document.getElementById('edit-id').value = p.id;
+      document.getElementById('prod-name').value = p.name;
+      document.getElementById('prod-price').value = p.price;
+      
+      document.getElementById('prod-img-url').value = p.image;
+      document.getElementById('image-file-label').innerText = "تم اختيار صورة سابقاً (اضغط للتغيير)";
+      if (p.image) {
+        const imgContainer = document.getElementById('admin-image-preview-container');
+        const imgEl = document.getElementById('admin-image-preview');
+        imgEl.src = p.image;
+        imgContainer.classList.remove('hidden');
+      }
+
+      document.getElementById('prod-video-url').value = p.video;
+      document.getElementById('video-file-label').innerText = "تم اختيار فيديو سابقاً (اضغط للتغيير)";
+      if (p.video) {
+        const videoContainer = document.getElementById('admin-video-preview-container');
+        const videoEl = document.getElementById('admin-video-preview');
+        const videoSrc = document.getElementById('admin-video-preview-src');
+        videoSrc.src = p.video;
+        videoEl.load();
+        videoContainer.classList.remove('hidden');
+      }
+
+      document.getElementById('prod-desc').value = p.desc;
+      document.getElementById('form-title').innerText = `تعديل منتج: ${p.name}`;
+    }
+
+    function deleteProduct(id) {
+      if(confirm("هل أنت تأكد من حذف هذا المنتج؟")) {
+        products = products.filter(p => p.id !== id);
+        saveProductsToStorage(); // حفظ القائمة الجديدة بعد الحذف
+        renderProducts();
+        renderAdminList();
+      }
+    }
+
+    function resetAdminForm() {
+      document.getElementById('edit-id').value = '';
+      document.getElementById('prod-name').value = '';
+      document.getElementById('prod-price').value = '';
+      
+      document.getElementById('prod-img-url').value = '';
+      document.getElementById('prod-img-file').value = '';
+      document.getElementById('image-file-label').innerText = 'اختر صورة من جهازك...';
+      document.getElementById('admin-image-preview-container').classList.add('hidden');
+
+      document.getElementById('prod-video-url').value = '';
+      document.getElementById('prod-video-file').value = '';
+      document.getElementById('video-file-label').innerText = 'اختر فيديو من جهازك...';
+      document.getElementById('admin-video-preview-container').classList.add('hidden');
+
+      document.getElementById('prod-desc').value = '';
+      document.getElementById('form-title').innerText = 'إضافة منتج جديد للمتجر';
+    }
+
+    function toggleCart() {
+      const drawer = document.getElementById('cart-drawer');
+      drawer.classList.toggle('hidden');
+      drawer.classList.toggle('flex');
+    }
+
+    function addToCart(name, price) {
+      cart.push({ id: Date.now(), name, price });
+      saveCartToStorage(); // حفظ السلة تلقائياً
+      updateCartUI();
+      const drawer = document.getElementById('cart-drawer');
+      if (drawer.classList.contains('hidden')) {
+        toggleCart();
+      }
+    }
+
+    function removeFromCart(cartItemId) {
+      cart = cart.filter(item => item.id !== cartItemId);
+      saveCartToStorage(); // حفظ السلة تلقائياً بعد الحذف
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const badge = document.getElementById('cart-badge');
+      const container = document.getElementById('cart-items');
+      const totalEl = document.getElementById('total-price');
+
+      badge.innerText = cart.length;
+      if (cart.length === 0) {
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+        container.innerHTML = `<p class="text-neutral-500 text-center py-8">السلة فارغة حالياً</p>`;
+        totalEl.innerText = `0 ج.م`;
+        return;
+      }
+
+      badge.classList.remove('hidden');
+      badge.classList.add('flex');
+
+      let total = 0;
+      container.innerHTML = cart.map((item) => {
+        total += item.price;
+        return `
+          <div class="flex justify-between items-center bg-neutral-900/90 p-4 rounded-2xl border border-neutral-800">
+            <div>
+              <div class="font-bold text-sm text-white">${item.name}</div>
+              <div class="text-cyan-400 text-xs font-black mt-1">${item.price} ج.م</div>
+            </div>
+            <button onclick="removeFromCart(${item.id})" class="p-2 text-neutral-500 hover:text-red-400 transition">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      totalEl.innerText = `${total} ج.م`;
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    function submitOrder() {
+      if (cart.length === 0) return;
+      alert("تم تسجيل الطلب بنجاح!");
+      cart = [];
+      saveCartToStorage(); // مسح السلة بعد الطلب
+      updateCartUI();
+      toggleCart();
+    }
+
+    // تشغيل وتحميل البيانات المحفوظة عند فتح الصفحة
+    document.addEventListener("DOMContentLoaded", function() {
+      loadProductsFromStorage();
+      loadCartFromStorage();
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      renderProducts();
+      updateCartUI();
+    });
+  </script>
+</body>
+</html>
